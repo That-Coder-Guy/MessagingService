@@ -4,9 +4,161 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
+        xmlns:control="clr-namespace:Client.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Messager" Height="720" MinHeight="200" Width="1080" MinWidth="300" WindowStartupLocation="CenterScreen" WindowStyle="None" Loaded="OnLoaded">
+    <Window.Resources>
+        <!-- "MinimizeButton" Style -->
+        <Style x:Key="MinimizeButton" TargetType="{x:Type Button}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Border x:Name="border" Background="White" Opacity="0" SnapsToDevicePixels="true"/>
+                            <Path Width="11" Height="1" Stretch="Uniform" Data="M0,0 H15" Stroke="White" StrokeThickness="1" RenderOptions.EdgeMode="Aliased"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Opacity" TargetName="border" Value="0.1"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Opacity" TargetName="border" Value="0.2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-    </Grid>
+        <!-- "MaximizeButton" Style -->
+        <Style x:Key="MaximizeButton" TargetType="{x:Type Button}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Border x:Name="border" Background="White" Opacity="0" SnapsToDevicePixels="true"/>
+                            <Path x:Name="maximizeGlyph" Visibility="Hidden" Width="9" Height="9" Stretch="Uniform" Data="M0,0 L1,0 L1,1 L0,1 L0,0 Z" Stroke="White" StrokeThickness="1" RenderOptions.EdgeMode="Aliased"/>
+                            <Path x:Name="normalizeGlyph" Visibility="Visible" Width="11" Height="11" Stretch="Uniform" Data="M 0 1 L 4 1 L 4 5 L 0 5 Z M 1 1 L 1 0 L 5 0 L 5 4 L 4 4" Stroke="White" StrokeThickness="1" RenderOptions.EdgeMode="Aliased"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}" Value="Normal">
+                                <Setter TargetName="normalizeGlyph" Property="Visibility" Value="Hidden" />
+                                <Setter TargetName="maximizeGlyph" Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}" Value="Maximized">
+                                <Setter TargetName="normalizeGlyph" Property="Visibility" Value="Visible" />
+                                <Setter TargetName="maximizeGlyph" Property="Visibility" Value="Hidden" />
+                            </DataTrigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Opacity" TargetName="border" Value="0.1"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Opacity" TargetName="border" Value="0.2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- "CloseButton" Style -->
+        <Style x:Key="CloseButton" TargetType="{x:Type Button}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Border x:Name="border" Background="Red" Opacity="0" SnapsToDevicePixels="true"/>
+                            <Path Width="11" Height="11" Stretch="Uniform" Data="M0,0 L100,100 M100,0 L0,100" Stroke="White" StrokeThickness="1" RenderOptions.EdgeMode="Aliased"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}" Value="Maximized">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Opacity" TargetName="border" Value="0.8"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Opacity" TargetName="border" Value="0.9"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="5" UseAeroCaptionButtons="True"/>
+    </WindowChrome.WindowChrome>
+
+    <!-- Window Border -->
+    <Border x:Name="border" Background="#FF484848" DockPanel.Dock="Left" Padding="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <!-- Window Background -->
+            <Border Grid.Row="0" Grid.RowSpan="2">
+                <Border.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <LinearGradientBrush.RelativeTransform>
+                            <TransformGroup>
+                                <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                <SkewTransform CenterX="0.5" CenterY="0.5"/>
+                                <RotateTransform Angle="-45" CenterX="0.5" CenterY="0.5"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </LinearGradientBrush.RelativeTransform>
+                        <GradientStop Color="#FF103783" Offset="0.003"/>
+                        <GradientStop Color="#FF9BAFD9" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+            </Border>
+
+            <!-- Title Bar -->
+            <Grid>
+                <Grid.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#E5000000"/>
+                        <GradientStop Color="#00000000" Offset="1"/>
+                        <GradientStop Color="#99000000" Offset="0.94"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" MouseDown="OnTitlebarMouseDown" MouseMove="OnTitlebarMouseMove">
+                    <DockPanel LastChildFill="False" Background="#00000000">
+                        <TextBlock DockPanel.Dock="Left" Text="{Binding Title, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" FontSize="14" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="{DynamicResource PrimaryForegroundColor}"/>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button Style="{DynamicResource MinimizeButton}" Grid.Column="0" Width="46" DockPanel.Dock="Right" HorizontalAlignment="Right" Click="OnMinimizeClick"/>
+                            <Button Style="{DynamicResource MaximizeButton}" Grid.Column="1" Width="46" DockPanel.Dock="Right" Click="OnMaximizeClick"/>
+                            <Button Style="{DynamicResource CloseButton}" Grid.Column="2" Width="46" DockPanel.Dock="Right" Click="OnCloseClick"/>
+                        </Grid>
+                    </DockPanel>
+                </Border>
+            </Grid>
+
+            <!-- Window Body -->
+            <Grid Grid.Row="1" Margin="10">
+                <control:ConnectionControl x:Name="ConnectionPage" Visibility="Visible"/>
+                <control:LoginControl x:Name="LoginPage" Visibility="Hidden"/>
+            </Grid>
+        </Grid>
+    </Border>
 </Window>

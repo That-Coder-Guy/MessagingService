@@ -1,2 +1,6 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using Server;
+using WebSocketCommunication.Server;
+
+WebSocketServer server = new WebSocketServer(8080);
+server.AddService<MessagerClientHandler>("messager/");
+server.Run();
