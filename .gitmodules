@@ -1,0 +1,3 @@
+[submodule "WebSocketCommunication"]
+	path = WebSocketCommunication
+	url = https://github.com/That-Coder-Guy/WebSocketCommunication.git
