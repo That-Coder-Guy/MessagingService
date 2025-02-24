@@ -82,9 +82,8 @@ namespace Client.ViewModels
                     ConnectionStatusMessage = "The client is in an invalid state to preform a connection attempt from.";
                     break;
             }
+            _socket.Connect(5000);
         }
-
-
 
         private void OnConnected(object? sender, EventArgs e)
         {
