@@ -1,9 +1,13 @@
 ﻿using Client.ViewModels;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using Utilities.Enumerations;
+using Utilities.EventArguments;
+using Utilities.ViewModels;
 using WebSocketCommunication;
 using WpfScreenHelper;
 
@@ -18,6 +22,8 @@ namespace Client
         private List<Control> _pages;
 
         private ClientWebSocket _connection;
+
+        private ApplicationState _state = ApplicationState.Connect;
         #endregion
 
         #region Methods
@@ -28,20 +34,46 @@ namespace Client
             _pages = [ConnectionPage, LoginPage];
 
             _connection = new ClientWebSocket("ws://localhost:8080/messager/");
-            ConnectionPageViewModel model = new ConnectionPageViewModel(_connection);
-            ConnectionPage.DataContext = model;
-            //SetCurrentPage(ConnectionPage);
+            SetState(ApplicationState.Start);
             _connection.Connect(5000);
+        }
+
+        private void OnStateChanged(object? sender, StateChangedEventArgs args)
+        {
+            SetState(args.NewState);
+        }
+
+        private void SetState(ApplicationState state)
+        {
+            Debug.Print($"Set to state: {state}");
+            IViewModel viewModel;
+            switch (state)
+            {
+                case ApplicationState.Start:
+                case ApplicationState.Connect:
+                    viewModel = new ConnectionPageViewModel(_connection);
+                    viewModel.StateChanged += OnStateChanged;
+                    ConnectionPage.DataContext = viewModel;
+                    SetCurrentPage(ConnectionPage);
+                    break;
+                case ApplicationState.Login:
+                    //viewModel = new ConnectionPageViewModel(_connection);
+                    //viewModel.StateChanged += OnStateChanged;
+                    //LoginPage.DataContext = viewModel;
+                    SetCurrentPage(LoginPage);
+                    break;
+            }
+            _state = state;
         }
 
         private void SetCurrentPage(Control page)
         {
-            _pages.ForEach(page => page.Visibility = Visibility.Hidden);
-            page.Visibility = Visibility.Visible;
-        }
+            Dispatcher.Invoke(() =>
+            {
+                _pages.ForEach(page => page.Visibility = Visibility.Hidden);
+                page.Visibility = Visibility.Visible;
+            });
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
         }
 
         /// <summary>

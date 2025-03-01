@@ -10,8 +10,4 @@
     <ProjectReference Include="..\..\WebSocketCommunication\WebSocketCommunication\WebSocketCommunication.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="EventArguments\" />
-  </ItemGroup>
-
 </Project>

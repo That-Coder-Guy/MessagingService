@@ -9,6 +9,10 @@ namespace Client.Controls
     /// </summary>
     public partial class ConnectionControl : UserControl
     {
+        #region Events
+
+        #endregion
+
         public ConnectionControl()
         {
             InitializeComponent();

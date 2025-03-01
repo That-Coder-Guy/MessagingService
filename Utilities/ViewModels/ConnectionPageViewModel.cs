@@ -1,12 +1,17 @@
 ﻿using System.ComponentModel;
+using Utilities.Enumerations;
+using Utilities.EventArguments;
+using Utilities.ViewModels;
 using WebSocketCommunication;
 
 namespace Client.ViewModels
 {
-    public class ConnectionPageViewModel : INotifyPropertyChanged
+    public class ConnectionPageViewModel : IViewModel
     {
         #region Events
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        public event EventHandler<StateChangedEventArgs>? StateChanged;
         #endregion
 
         #region Field
@@ -42,7 +47,7 @@ namespace Client.ViewModels
                     ConnectionStatusMessage = "Connection attempt timed out.";
                     break;
 
-                case WebSocketError.Success:
+                case WebSocketError.UnknownError:
                     ConnectionStatusMessage = "An unknown error occured during the connection attempt.";
                     break;
 
@@ -82,12 +87,16 @@ namespace Client.ViewModels
                     ConnectionStatusMessage = "The client is in an invalid state to preform a connection attempt from.";
                     break;
             }
+            Task.Delay(5000).Wait();
+            ConnectionStatusMessage = "Reattempting...";
             _socket.Connect(5000);
         }
 
         private void OnConnected(object? sender, EventArgs e)
         {
             ConnectionStatusMessage = "Connected!";
+            Task.Delay(5000).Wait();
+            StateChanged?.Invoke(this, new StateChangedEventArgs(ApplicationState.Login));
         }
     }
 }

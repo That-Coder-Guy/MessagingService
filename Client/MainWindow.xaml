@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Client"
         xmlns:control="clr-namespace:Client.Controls"
         mc:Ignorable="d"
-        Title="Messager" Height="720" MinHeight="200" Width="1080" MinWidth="300" WindowStartupLocation="CenterScreen" WindowStyle="None" Loaded="OnLoaded">
+        Title="Messager" Height="720" MinHeight="200" Width="1080" MinWidth="300" WindowStartupLocation="CenterScreen" WindowStyle="None">
     <Window.Resources>
         <!-- "MinimizeButton" Style -->
         <Style x:Key="MinimizeButton" TargetType="{x:Type Button}">
@@ -129,7 +129,7 @@
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="#E5000000"/>
                         <GradientStop Color="#00000000" Offset="1"/>
-                        <GradientStop Color="#99000000" Offset="0.94"/>
+                        <GradientStop Color="#B2000000" Offset="0.94"/>
                     </LinearGradientBrush>
                 </Grid.Background>
                 <Grid.RowDefinitions>
