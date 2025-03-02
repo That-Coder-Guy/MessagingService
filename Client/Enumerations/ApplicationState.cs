@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Utilities.Enumerations
+namespace Client.Enumerations
 {
     public enum ApplicationState
     {

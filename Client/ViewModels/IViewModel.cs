@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
-using Utilities.EventArguments;
+using Client.EventArguments;
 
-namespace Utilities.ViewModels
+namespace Client.ViewModels
 {
     public interface IViewModel : INotifyPropertyChanged
     {

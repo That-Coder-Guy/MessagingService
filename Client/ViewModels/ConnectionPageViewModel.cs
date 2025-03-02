@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel;
-using Utilities.Enumerations;
-using Utilities.EventArguments;
-using Utilities.ViewModels;
+using System.Data.Common;
+using Client.Enumerations;
+using Client.EventArguments;
+using Client.ViewModels;
 using WebSocketCommunication;
 
 namespace Client.ViewModels
@@ -37,6 +38,9 @@ namespace Client.ViewModels
             _socket = socket;
             _socket.ConnectionFailed += OnConnectionFailed;
             _socket.Connected += OnConnected;
+
+            //_socket.Connect(5000);
+            _socket.Connect(5000);
         }
 
         private void OnConnectionFailed(object? sender, ConnectionFailedEventArgs e)

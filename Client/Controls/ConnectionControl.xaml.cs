@@ -1,6 +1,4 @@
 ﻿using System.Windows.Controls;
-using Utilities;
-using WebSocketCommunication;
 
 namespace Client.Controls
 {
@@ -9,10 +7,6 @@ namespace Client.Controls
     /// </summary>
     public partial class ConnectionControl : UserControl
     {
-        #region Events
-
-        #endregion
-
         public ConnectionControl()
         {
             InitializeComponent();

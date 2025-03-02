@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csproj", "{FFC0BC34-55EC-47A3-BF33-266B4FBD581B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSocketCommunication", ".\WebSocketCommunication\WebSocketCommunication\WebSocketCommunication.csproj", "{03152DBF-9872-40F3-888B-48750D4EE75C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSocketCommunication", "WebSocketCommunication\WebSocketCommunication\WebSocketCommunication.csproj", "{03152DBF-9872-40F3-888B-48750D4EE75C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{23723F3F-69E0-48CD-B40D-66934D573F68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSocketUtilities", "Utilities\WebSocketUtilities.csproj", "{23723F3F-69E0-48CD-B40D-66934D573F68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

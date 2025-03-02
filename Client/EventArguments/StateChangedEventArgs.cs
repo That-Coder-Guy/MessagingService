@@ -1,6 +1,6 @@
-﻿using Utilities.Enumerations;
+﻿using Client.Enumerations;
 
-namespace Utilities.EventArguments
+namespace Client.EventArguments
 {
     public class StateChangedEventArgs : EventArgs
     {

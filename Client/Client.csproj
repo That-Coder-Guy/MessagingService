@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Utilities\Utilities.csproj" />
+    <ProjectReference Include="..\Utilities\WebSocketUtilities.csproj" />
     <ProjectReference Include="..\WebSocketCommunication\WebSocketCommunication\WebSocketCommunication.csproj" />
   </ItemGroup>
 

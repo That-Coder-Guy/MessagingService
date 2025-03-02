@@ -5,9 +5,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
-using Utilities.Enumerations;
-using Utilities.EventArguments;
-using Utilities.ViewModels;
+using Client.Enumerations;
+using Client.EventArguments;
 using WebSocketCommunication;
 using WpfScreenHelper;
 
@@ -32,10 +31,9 @@ namespace Client
             InitializeComponent();
 
             _pages = [ConnectionPage, LoginPage];
-
             _connection = new ClientWebSocket("ws://localhost:8080/messager/");
+
             SetState(ApplicationState.Start);
-            _connection.Connect(5000);
         }
 
         private void OnStateChanged(object? sender, StateChangedEventArgs args)
