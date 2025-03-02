@@ -43,24 +43,26 @@ namespace Client
 
         private void SetState(ApplicationState state)
         {
-            Debug.Print($"Set to state: {state}");
-            IViewModel viewModel;
-            switch (state)
+            Dispatcher.Invoke(() =>
             {
-                case ApplicationState.Start:
-                case ApplicationState.Connect:
-                    viewModel = new ConnectionPageViewModel(_connection);
-                    viewModel.StateChanged += OnStateChanged;
-                    ConnectionPage.DataContext = viewModel;
-                    SetCurrentPage(ConnectionPage);
-                    break;
-                case ApplicationState.Login:
-                    //viewModel = new ConnectionPageViewModel(_connection);
-                    //viewModel.StateChanged += OnStateChanged;
-                    //LoginPage.DataContext = viewModel;
-                    SetCurrentPage(LoginPage);
-                    break;
-            }
+                IViewModel viewModel;
+                switch (state)
+                {
+                    case ApplicationState.Start:
+                    case ApplicationState.Connect:
+                        viewModel = new ConnectionPageViewModel(_connection);
+                        viewModel.StateChanged += OnStateChanged;
+                        ConnectionPage.DataContext = viewModel;
+                        SetCurrentPage(ConnectionPage);
+                        break;
+                    case ApplicationState.Login:
+                        viewModel = new LoginPageViewModel(_connection);
+                        viewModel.StateChanged += OnStateChanged;
+                        LoginPage.DataContext = viewModel;
+                        SetCurrentPage(LoginPage);
+                        break;
+                }
+            });
             _state = state;
         }
 

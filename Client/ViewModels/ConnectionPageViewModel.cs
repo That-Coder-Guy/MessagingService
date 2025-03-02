@@ -39,7 +39,6 @@ namespace Client.ViewModels
             _socket.ConnectionFailed += OnConnectionFailed;
             _socket.Connected += OnConnected;
 
-            //_socket.Connect(5000);
             _socket.Connect(5000);
         }
 
@@ -99,7 +98,7 @@ namespace Client.ViewModels
         private void OnConnected(object? sender, EventArgs e)
         {
             ConnectionStatusMessage = "Connected!";
-            Task.Delay(5000).Wait();
+            Task.Delay(1000).Wait();
             StateChanged?.Invoke(this, new StateChangedEventArgs(ApplicationState.Login));
         }
     }
