@@ -38,7 +38,6 @@ namespace Client.ViewModels
             _socket = socket;
             _socket.ConnectionFailed += OnConnectionFailed;
             _socket.Connected += OnConnected;
-
             _socket.Connect(5000);
         }
 
@@ -46,6 +45,12 @@ namespace Client.ViewModels
         {
             switch (e.Error)
             {
+                case WebSocketError.AlreadyConnected:
+                    return;
+
+                case WebSocketError.AlreadyConnecting:
+                    return;
+
                 case WebSocketError.Timeout:
                     ConnectionStatusMessage = "Connection attempt timed out.";
                     break;

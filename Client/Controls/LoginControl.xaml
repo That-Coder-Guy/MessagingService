@@ -24,11 +24,13 @@
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Text="Login" Foreground="{DynamicResource PrimaryForegroundColor}" FontSize="{DynamicResource LargeFontSize}" FontFamily="{DynamicResource DefaultFontFamily}" TextAlignment="Center" VerticalAlignment="Center" />
                 <RichTextBox Grid.Row="1" VerticalAlignment="Center" FontSize="{DynamicResource MediumFontSize}"/>
-                <RichTextBox Grid.Row="2" VerticalAlignment="Center" FontSize="{DynamicResource MediumFontSize}"/>
-                <Button Grid.Row="3" VerticalAlignment="Center" Content="Login" FontSize="{DynamicResource MediumFontSize}" />
+                <PasswordBox Grid.Row="2"  VerticalAlignment="Center" FontSize="{DynamicResource MediumFontSize}"/>
+                <Button Grid.Row="3" VerticalAlignment="Center" Content="Log In" FontSize="{DynamicResource MediumFontSize}"/>
+                <Button Grid.Row="4" VerticalAlignment="Center" Content="Sign Up" FontSize="{DynamicResource MediumFontSize}" HorizontalAlignment="Left"/>
             </Grid>
         </Border>
     </Grid>
