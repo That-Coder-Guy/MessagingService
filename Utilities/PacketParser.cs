@@ -1,41 +1,114 @@
-﻿namespace WebSocketUtilities
+﻿using System.IO.Pipelines;
+using System.Net.Sockets;
+using System.Net.WebSockets;
+using System.Security.Cryptography;
+using System.Security.Cryptography.Xml;
+using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace WebSocketUtilities
 {
     public class PacketParser
     {
         #region Properties
-        public string PublicKey { get; }
+        public byte[] PublicKey { get; }
 
-        public string ForeignPublicKey { get; set; }
+        public byte[]? ForeignPublicKey { get; set; } = null;
         #endregion
 
         #region Fields
-        private string _privateKey;
+        private readonly byte[] _privateKey;
         #endregion
 
         #region Methods
         public PacketParser()
         {
-
+            using (RSA rsa = RSA.Create(2048))
+            {
+                PublicKey = rsa.ExportRSAPublicKey();
+                _privateKey = rsa.ExportRSAPrivateKey();
+            }
         }
 
         public MemoryStream Encrypt(MemoryStream data)
         {
+            if (ForeignPublicKey == null)
+            {
+                throw new InvalidOperationException("ForeignPublicKey is not set.");
+            }
 
+            MemoryStream encryptedData = new MemoryStream();
+            using (RSA rsa = RSA.Create())
+            {
+                rsa.ImportRSAPublicKey(ForeignPublicKey, out _);
+                int bufferSize = rsa.KeySize / 8 - 2 * SHA256.HashSizeInBytes - 2;
+
+                byte[] buffer = new byte[bufferSize];
+                while (data.Position < data.Length)
+                {
+                    int bytesRead = data.Read(buffer);
+                    encryptedData.Write(rsa.Encrypt(buffer[..bytesRead], RSAEncryptionPadding.OaepSHA256));
+                }
+            }
+            encryptedData.Position = 0;
+            return encryptedData;
         }
 
         public MemoryStream Decrypt(MemoryStream data)
         {
+            MemoryStream decryptedData = new MemoryStream();
+            using (RSA rsa = RSA.Create())
+            {
+                rsa.ImportRSAPrivateKey(_privateKey, out _);
+                int bufferSize = rsa.KeySize / 8 - 2 * SHA256.HashSizeInBytes - 2;
 
+                byte[] buffer = new byte[bufferSize];
+                while (data.Position < data.Length)
+                {
+                    int bytesRead = data.Read(buffer);
+                    decryptedData.Write(rsa.Decrypt(buffer[..bytesRead], RSAEncryptionPadding.OaepSHA256));
+                }
+            }
+            decryptedData.Position = 0;
+            return decryptedData; 
         }
 
         public MemoryStream Serialize(IPacket packet)
         {
+            MemoryStream data = new MemoryStream();
+            JsonSerializer.Serialize(data, packet);
+            return data;
+        }
+        
+        public async Task SendAsync(IPacket packet, WebSocket socket)
+        {
+            Pipe pipe = new Pipe();
+            Stream writer = pipe.Writer.AsStream();
+            Stream reader = pipe.Reader.AsStream();
 
+            // Serialize JSON directly into the pipe writer (avoiding buffering in memory)
+            Task serializeTask = JsonSerializer.SerializeAsync(writer, packet);
+
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+
+            // Read from the pipe and send data to WebSocket in chunks
+            while ((bytesRead = await reader.ReadAsync(buffer)) > 0)
+            {
+                bool isEndOfMessage = reader.Position == reader.Length;
+                await socket.SendAsync(buffer[..bytesRead], WebSocketMessageType.Text, isEndOfMessage, CancellationToken.None);
+            }
+
+            await serializeTask; // Ensure serialization completes
         }
 
-        public IPacket Deserialize(MemoryStream data)
+        public TSource Deserialize<TSource>(MemoryStream data) where TSource : IPacket
         {
-
+            if (JsonSerializer.Deserialize<TSource>(data) is TSource obj)
+            {
+                return obj;
+            }
+            throw new ArgumentException($"MemoryStream could not be deserialized into {typeof(TSource).Name}", nameof(data));
         }
         #endregion
     }
