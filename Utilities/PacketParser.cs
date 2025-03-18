@@ -79,28 +79,6 @@ namespace WebSocketUtilities
             JsonSerializer.Serialize(data, packet);
             return data;
         }
-        
-        public async Task SendAsync(IPacket packet, WebSocket socket)
-        {
-            Pipe pipe = new Pipe();
-            Stream writer = pipe.Writer.AsStream();
-            Stream reader = pipe.Reader.AsStream();
-
-            // Serialize JSON directly into the pipe writer (avoiding buffering in memory)
-            Task serializeTask = JsonSerializer.SerializeAsync(writer, packet);
-
-            byte[] buffer = new byte[4096];
-            int bytesRead;
-
-            // Read from the pipe and send data to WebSocket in chunks
-            while ((bytesRead = await reader.ReadAsync(buffer)) > 0)
-            {
-                bool isEndOfMessage = reader.Position == reader.Length;
-                await socket.SendAsync(buffer[..bytesRead], WebSocketMessageType.Text, isEndOfMessage, CancellationToken.None);
-            }
-
-            await serializeTask; // Ensure serialization completes
-        }
 
         public TSource Deserialize<TSource>(MemoryStream data) where TSource : IPacket
         {
