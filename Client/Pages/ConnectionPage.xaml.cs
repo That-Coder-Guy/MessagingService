@@ -3,11 +3,11 @@
 namespace Client.Controls
 {
     /// <summary>
-    /// Interaction logic for LoginControl.xaml
+    /// Interaction logic for ConnectionControl.xaml
     /// </summary>
-    public partial class LoginControl : UserControl
+    public partial class ConnectionPage : UserControl
     {
-        public LoginControl()
+        public ConnectionPage()
         {
             InitializeComponent();
         }

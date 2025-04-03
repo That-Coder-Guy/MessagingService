@@ -18,7 +18,7 @@ namespace Client
     public partial class MainWindow : Window
     {
         #region Fields
-        private List<Control> _pages;
+        private UIElementCollection _pages;
 
         private ClientWebSocket _connection;
 
@@ -30,7 +30,7 @@ namespace Client
         {
             InitializeComponent();
 
-            _pages = [ConnectionPage, LoginPage];
+            _pages = uxPageDisplayGrid.Children;
             _connection = new ClientWebSocket("ws://localhost:8080/messager/");
 
             SetState(ApplicationState.Start);
@@ -52,14 +52,20 @@ namespace Client
                     case ApplicationState.Connect:
                         viewModel = new ConnectionPageViewModel(_connection);
                         viewModel.StateChanged += OnStateChanged;
-                        ConnectionPage.DataContext = viewModel;
-                        SetCurrentPage(ConnectionPage);
+                        uxConnectionPage.DataContext = viewModel;
+                        SetCurrentPage(uxConnectionPage);
                         break;
                     case ApplicationState.Login:
                         viewModel = new LoginPageViewModel(_connection);
                         viewModel.StateChanged += OnStateChanged;
-                        LoginPage.DataContext = viewModel;
-                        SetCurrentPage(LoginPage);
+                        uxLoginPage.DataContext = viewModel;
+                        SetCurrentPage(uxLoginPage);
+                        break;
+                    case ApplicationState.SignUp:
+                        viewModel = new SignUpPageViewModel(_connection);
+                        viewModel.StateChanged += OnStateChanged;
+                        uxSignUpPage.DataContext = viewModel;
+                        SetCurrentPage(uxSignUpPage);
                         break;
                 }
             });
@@ -70,7 +76,10 @@ namespace Client
         {
             Dispatcher.Invoke(() =>
             {
-                _pages.ForEach(page => page.Visibility = Visibility.Hidden);
+                foreach (UIElement element in _pages)
+                {
+                    element.Visibility = Visibility.Hidden;
+                }
                 page.Visibility = Visibility.Visible;
             });
 

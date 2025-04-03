@@ -18,6 +18,10 @@ namespace WebSocketUtilities
 
         #region Fields
         private readonly byte[] _privateKey;
+
+        private static readonly Dictionary<PacketId, Type> _packetMap = new() {
+            { PacketId.CreateAccount, typeof(CreateAccountPacket) }
+        };
         #endregion
 
         #region Methods
@@ -73,20 +77,29 @@ namespace WebSocketUtilities
             return decryptedData; 
         }
 
-        public MemoryStream Serialize(IPacket packet)
+        public static MemoryStream Serialize(IPacket packet)
         {
             MemoryStream data = new MemoryStream();
             JsonSerializer.Serialize(data, packet);
             return data;
         }
 
-        public TSource Deserialize<TSource>(MemoryStream data) where TSource : IPacket
+        public static IPacket Deserialize(MemoryStream data)
         {
-            if (JsonSerializer.Deserialize<TSource>(data) is TSource obj)
+            using (JsonDocument documant = JsonDocument.Parse(data))
             {
-                return obj;
+                PacketId packetId = (PacketId)documant.RootElement.EnumerateObject().First().Value.GetInt32();
+                if (_packetMap.TryGetValue(packetId, out Type? packetType))
+                {
+                    if (JsonSerializer.Deserialize(data, packetType) is IPacket packet)
+                    {
+                        return packet;
+                    }
+
+                    throw new ArgumentException($"MemoryStream could not be deserialized into {packetType.Name}", nameof(data));
+                }
+                throw new ArgumentException($"MemoryStream could not be deserialized into a packet", nameof(data));
             }
-            throw new ArgumentException($"MemoryStream could not be deserialized into {typeof(TSource).Name}", nameof(data));
         }
         #endregion
     }

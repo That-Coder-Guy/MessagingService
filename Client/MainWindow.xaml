@@ -155,9 +155,10 @@
             </Grid>
 
             <!-- Window Body -->
-            <Grid Grid.Row="1" Margin="10">
-                <control:ConnectionControl x:Name="ConnectionPage" Visibility="Visible"/>
-                <control:LoginControl x:Name="LoginPage" Visibility="Hidden"/>
+            <Grid x:Name="uxPageDisplayGrid" Grid.Row="1" Margin="10">
+                <control:ConnectionPage x:Name="uxConnectionPage" Visibility="Visible"/>
+                <control:LoginPage x:Name="uxLoginPage" Visibility="Hidden"/>
+                <control:SignUpPage x:Name="uxSignUpPage" Visibility="Hidden"/>
             </Grid>
         </Grid>
     </Border>

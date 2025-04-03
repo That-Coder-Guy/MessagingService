@@ -9,6 +9,7 @@ namespace WebSocketUtilities
 {
     public enum PacketId
     {
-        PublicKeyHandshake
+        PublicKeyHandshake,
+        CreateAccount
     }
 }

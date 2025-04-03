@@ -6,7 +6,7 @@ using WebSocketCommunication;
 
 namespace Client.ViewModels
 {
-    public class LoginPageViewModel : IViewModel
+    public class SignUpPageViewModel : IViewModel
     {
         #region Events
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -18,15 +18,19 @@ namespace Client.ViewModels
         private ClientWebSocket _socket;
         #endregion
 
+        #region Properties
+
+        #endregion
+
         #region Methods
-        public LoginPageViewModel(ClientWebSocket socket)
+        public SignUpPageViewModel(ClientWebSocket socket)
         {
             _socket = socket;
         }
 
-        public void OnSignUpClicked(object sender, RoutedEventArgs e)
+        public void OnLoginClicked(object sender, RoutedEventArgs e)
         {
-            StateChanged?.Invoke(this, new StateChangedEventArgs(ApplicationState.SignUp));
+            StateChanged?.Invoke(this, new StateChangedEventArgs(ApplicationState.Login));
         }
         #endregion
     }

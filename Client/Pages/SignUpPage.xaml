@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Client.Controls.LoginControl"
+﻿<UserControl x:Class="Client.Controls.SignUpPage"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -26,11 +26,11 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="Login" Foreground="{DynamicResource PrimaryForegroundColor}" FontSize="{DynamicResource LargeFontSize}" FontFamily="{DynamicResource DefaultFontFamily}" TextAlignment="Center" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="0" Text="Sign Up" Foreground="{DynamicResource PrimaryForegroundColor}" FontSize="{DynamicResource LargeFontSize}" FontFamily="{DynamicResource DefaultFontFamily}" TextAlignment="Center" VerticalAlignment="Center" />
                 <RichTextBox Grid.Row="1" VerticalAlignment="Center" FontSize="{DynamicResource MediumFontSize}"/>
                 <PasswordBox Grid.Row="2"  VerticalAlignment="Center" FontSize="{DynamicResource MediumFontSize}"/>
-                <Button Grid.Row="3" VerticalAlignment="Center" Content="Log In" FontSize="{DynamicResource MediumFontSize}"/>
-                <Button Grid.Row="4" VerticalAlignment="Center" Content="Sign Up" FontSize="{DynamicResource MediumFontSize}" HorizontalAlignment="Left"/>
+                <Button Grid.Row="3" VerticalAlignment="Center" Content="Sign Up" FontSize="{DynamicResource MediumFontSize}"/>
+                <Button Grid.Row="4" VerticalAlignment="Center" Content="Log In" FontSize="{DynamicResource MediumFontSize}" HorizontalAlignment="Left" Click="OnLoginClicked"/>
             </Grid>
         </Border>
     </Grid>

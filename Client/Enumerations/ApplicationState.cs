@@ -10,6 +10,7 @@ namespace Client.Enumerations
     {
         Start,
         Connect,
-        Login
+        Login,
+        SignUp
     }
 }
