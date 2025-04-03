@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using WebSocketCommunication;
 using WebSocketCommunication.Server;
 using WebSocketUtilities;
@@ -26,22 +27,31 @@ namespace Server
 
         protected override void OnMessageReceived(object? sender, MessageEventArgs e)
         {
-            IPacket packet = PacketParser.Deserialize(e.Data);
-            using (DatabaseContext context = new DatabaseContext())
+            try
             {
-                if (packet is CreateAccountPacket createAccountPacket)
+                IPacket packet = PacketParser.Deserialize(e.Data);
+                using (DatabaseContext context = new DatabaseContext())
                 {
-                    User newUser = new User(
-                        createAccountPacket.Username,
-                        createAccountPacket.Password
-                        );
-                    context.Users.Add(newUser);
+                    if (packet is CreateAccountPacket createAccountPacket)
+                    {
+                        User newUser = new User(
+                            createAccountPacket.Username,
+                            createAccountPacket.Password
+                            );
+                        Debug.Print($"{createAccountPacket.Username}, {createAccountPacket.Password}");
+                        context.Users.Add(newUser);
 
-                    context.SaveChanges(); // TODO: Add exception handling for concurrancy exceptions or add a AddUser method to the DatabaseContext class that handles the logic.
+                        context.SaveChanges(); // TODO: Add exception handling for concurrancy exceptions or add a AddUser method to the DatabaseContext class that handles the logic.
 
-                    _clientAccount = newUser;
+                        _clientAccount = newUser;
+                    }
                 }
             }
+            catch (Exception exc)
+            {
+                Debug.Print(exc.Message);
+            }
+            Console.WriteLine("Account Created");
         }
     }
 }

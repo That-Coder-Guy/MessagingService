@@ -13,6 +13,11 @@ namespace Client.Controls
         {
             InitializeComponent();
         }
+        
+        private void OnSignUpClicked(object sender, RoutedEventArgs e)
+        {
+            ((SignUpPageViewModel)DataContext)?.OnSignUpClicked(sender, e);
+        }
 
         private void OnLoginClicked(object sender, RoutedEventArgs e)
         {

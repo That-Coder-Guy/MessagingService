@@ -1,4 +1,5 @@
-﻿using System.IO.Pipelines;
+﻿using System.Diagnostics;
+using System.IO.Pipelines;
 using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Security.Cryptography;
@@ -77,28 +78,40 @@ namespace WebSocketUtilities
             return decryptedData; 
         }
 
-        public static MemoryStream Serialize(IPacket packet)
+        public static MemoryStream Serialize<T>(T packet) where T : IPacket
         {
             MemoryStream data = new MemoryStream();
+            
             JsonSerializer.Serialize(data, packet);
+            data.Position = 0;
             return data;
         }
 
         public static IPacket Deserialize(MemoryStream data)
         {
-            using (JsonDocument documant = JsonDocument.Parse(data))
+            //data.Position = 0;
+            try
             {
-                PacketId packetId = (PacketId)documant.RootElement.EnumerateObject().First().Value.GetInt32();
-                if (_packetMap.TryGetValue(packetId, out Type? packetType))
+                using (JsonDocument documant = JsonDocument.Parse(data))
                 {
-                    if (JsonSerializer.Deserialize(data, packetType) is IPacket packet)
+                    PacketId packetId = (PacketId)documant.RootElement.EnumerateObject().First().Value.GetInt32();
+                    if (_packetMap.TryGetValue(packetId, out Type? packetType))
                     {
-                        return packet;
-                    }
+                        data.Position = 0;
+                        if (JsonSerializer.Deserialize(data, packetType) is IPacket packet)
+                        {
+                            return packet;
+                        }
 
-                    throw new ArgumentException($"MemoryStream could not be deserialized into {packetType.Name}", nameof(data));
+                        throw new ArgumentException($"MemoryStream could not be deserialized into {packetType.Name}", nameof(data));
+                    }
+                    throw new ArgumentException($"MemoryStream could not be deserialized into a packet", nameof(data));
                 }
-                throw new ArgumentException($"MemoryStream could not be deserialized into a packet", nameof(data));
+            }
+            catch (Exception exc)
+            {
+                Debug.Print(exc.Message);
+                throw;
             }
         }
         #endregion

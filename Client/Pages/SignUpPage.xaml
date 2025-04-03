@@ -27,9 +27,9 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Text="Sign Up" Foreground="{DynamicResource PrimaryForegroundColor}" FontSize="{DynamicResource LargeFontSize}" FontFamily="{DynamicResource DefaultFontFamily}" TextAlignment="Center" VerticalAlignment="Center" />
-                <RichTextBox Grid.Row="1" VerticalAlignment="Center" FontSize="{DynamicResource MediumFontSize}"/>
-                <PasswordBox Grid.Row="2"  VerticalAlignment="Center" FontSize="{DynamicResource MediumFontSize}"/>
-                <Button Grid.Row="3" VerticalAlignment="Center" Content="Sign Up" FontSize="{DynamicResource MediumFontSize}"/>
+                <TextBox Grid.Row="1" TextWrapping="NoWrap" Height="20" Text="{Binding Username}"/>
+                <TextBox Grid.Row="2" TextWrapping="NoWrap" Height="20" Text="{Binding Password}"/>
+                <Button Grid.Row="3" VerticalAlignment="Center" Content="Sign Up" FontSize="{DynamicResource MediumFontSize}" Click="OnSignUpClicked"/>
                 <Button Grid.Row="4" VerticalAlignment="Center" Content="Log In" FontSize="{DynamicResource MediumFontSize}" HorizontalAlignment="Left" Click="OnLoginClicked"/>
             </Grid>
         </Border>
